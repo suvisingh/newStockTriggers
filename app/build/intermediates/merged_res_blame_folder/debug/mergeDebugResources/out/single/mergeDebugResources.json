@@ -1,26 +1,26 @@
 [
     {
-        "merged": "/Users/suvarnasingh/.gradle/daemon/9.0-milestone-1/com.example.stocktriggers.app-debug-44:/xml_data_extraction_rules.xml.flat",
-        "source": "/Users/suvarnasingh/.gradle/daemon/9.0-milestone-1/com.example.stocktriggers.app-main-46:/xml/data_extraction_rules.xml"
+        "merged": "com.example.stocktriggers.app-debug-53:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.stocktriggers.app-main-55:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.example.stocktriggers.app-debug-44:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.example.stocktriggers.app-main-46:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.example.stocktriggers.app-debug-53:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.example.stocktriggers.app-main-55:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.example.stocktriggers.app-debug-44:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.example.stocktriggers.app-main-46:/drawable/ic_launcher_background.xml"
+        "merged": "com.example.stocktriggers.app-debug-53:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.stocktriggers.app-main-55:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "com.example.stocktriggers.app-debug-44:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.stocktriggers.app-main-46:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.example.stocktriggers.app-debug-53:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.stocktriggers.app-main-55:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "/Users/suvarnasingh/.gradle/daemon/9.0-milestone-1/com.example.stocktriggers.app-debug-44:/xml_backup_rules.xml.flat",
-        "source": "/Users/suvarnasingh/.gradle/daemon/9.0-milestone-1/com.example.stocktriggers.app-main-46:/xml/backup_rules.xml"
+        "merged": "com.example.stocktriggers.app-debug-53:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.stocktriggers.app-main-55:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "com.example.stocktriggers.app-debug-44:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.stocktriggers.app-main-46:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.example.stocktriggers.app-debug-53:/xml_backup_rules.xml.flat",
+        "source": "com.example.stocktriggers.app-main-55:/xml/backup_rules.xml"
     }
 ]

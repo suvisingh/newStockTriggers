@@ -4,6 +4,7 @@ object StockAnalyzer {
     
     data class AnalysisResult(
         val mean: Double,
+        val currentPrice: Double,
         val difference: Double,
         val percentageChange: Double,
         val signal: Signal
@@ -28,6 +29,6 @@ object StockAnalyzer {
             else -> Signal.NEUTRAL
         }
 
-        return AnalysisResult(mean, difference, percentageChange, signal)
+        return AnalysisResult(mean, currentPrice, difference, percentageChange, signal)
     }
 }

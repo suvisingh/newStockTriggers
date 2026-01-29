@@ -47,3 +47,21 @@ data class DailyClose(
     val timestamp: Long,
     val close: Double
 )
+
+enum class Signal {
+    BUY, SELL, NEUTRAL
+}
+
+sealed class StockUiState {
+    object Loading : StockUiState()
+    data class Success(
+        val symbol: String,
+        val data: List<DailyClose>,
+        val currentPrice: Double,
+        val meanPrice: Double,
+        val difference: Double,
+        val percentageChange: Double,
+        val signal: Signal
+    ) : StockUiState()
+    data class Error(val message: String) : StockUiState()
+}
