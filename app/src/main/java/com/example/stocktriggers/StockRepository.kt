@@ -5,6 +5,17 @@ import kotlinx.coroutines.delay
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * StockRepository handles the retrieval of stock market data from remote and mock sources.
+ *
+ * Intent:
+ * This class abstracts the data sourcing logic, providing a clean interface for the ViewModel
+ * to get historical stock price data. It handles network communication via Retrofit and
+ * provides fallback mock data in case of failures.
+ *
+ * Exposed APIs:
+ * - [getLastWorkingDaysData]: Fetches the most recent daily closing prices for a given symbol.
+ */
 class StockRepository {
 
     private val api: FinanceApi
@@ -19,6 +30,22 @@ class StockRepository {
         api = retrofit.create(FinanceApi::class.java)
     }
 
+    /**
+     * Fetches a specified number of recent daily closing prices for a stock symbol.
+     *
+     * This function attempts to fetch real-time data from Yahoo Finance. If the network call fails
+     * or the data is malformed, it falls back to providing a set of mock data points.
+     *
+     * @param symbol The stock ticker symbol to fetch data for (e.g., "^NSEI", "AAPL").
+     * @param limit The maximum number of daily data points to return (default is 6).
+     * @return A List of [DailyClose] objects containing timestamp and closing price.
+     *
+     * Example:
+     * ```
+     * val data = repository.getLastWorkingDaysData("AAPL", 5)
+     * // returns a list of the last 5 closing prices for Apple.
+     * ```
+     */
     suspend fun getLastWorkingDaysData(symbol: String, limit: Int = 6): List<DailyClose> {
         Log.d(TAG, "getLastWorkingDaysData called for symbol: $symbol")
         return try {
@@ -54,6 +81,11 @@ class StockRepository {
         }
     }
 
+    /**
+     * Generates a list of mock stock data points for development and fallback purposes.
+     *
+     * @return A List of [DailyClose] objects with hardcoded prices and relative timestamps.
+     */
     private suspend fun getMockData(): List<DailyClose> {
         Log.d(TAG, "Providing mock data")
         delay(500)

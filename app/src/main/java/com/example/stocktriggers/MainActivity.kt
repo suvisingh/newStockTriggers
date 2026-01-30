@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
@@ -68,9 +69,27 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
+/**
+ * MainActivity is the entry point of the StockTriggers application.
+ *
+ * Intent:
+ * It serves as the single Activity for the app, responsible for initializing the ViewModel,
+ * setting up background synchronization workers, and hosting the main Compose UI.
+ *
+ * Exposed APIs:
+ * - [onCreate]: Standard Activity lifecycle method to initialize the UI and background sync.
+ */
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
+    /**
+     * Called when the activity is starting.
+     * Sets up background sync and initializes the Jetpack Compose UI.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in [onSaveInstanceState].
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -84,7 +103,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val context = LocalContext.current
                     
-                    // Listen for Toast messages
+                    // Listen for transient message events from ViewModel
                     LaunchedEffect(Unit) {
                         viewModel.messageEvent.collect { message ->
                             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -108,11 +127,21 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Configures and schedules a periodic background task to sync stock data hourly.
+     *
+     * The task is scheduled to start at 9:45 AM IST and repeat every hour.
+     * It uses [WorkManager] to ensure the task runs even if the app is closed.
+     *
+     * Example:
+     * ```
+     * setupHourlySync()
+     * ```
+     */
     private fun setupHourlySync() {
         val workManager = WorkManager.getInstance(this)
         
-        // Calculate delay to next 9:45 AM IST
-        // 9:45 AM IST is 04:15 UTC (if standard time) - better to use Calendar with TimeZone
+        // Calculate delay to next 9:45 AM IST (04:15 UTC)
         val calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone("Asia/Kolkata"))
         val now = calendar.timeInMillis
         
@@ -144,6 +173,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Main screen composable that displays the favorites dashboard, search bar, and stock details.
+ *
+ * @param uiState Current state of the stock data fetch.
+ * @param favoritesDashboard List of favorited stocks to display in tiles.
+ * @param isCurrentFavorite Whether the current stock is in favorites.
+ * @param onRefresh Callback to trigger a data refresh.
+ * @param onUpdateSymbol Callback to search for a new symbol.
+ * @param onToggleFavorite Callback to add/remove the current symbol from favorites.
+ */
 @Composable
 fun StockScreen(
     uiState: StockUiState,
@@ -242,6 +281,9 @@ fun StockScreen(
     }
 }
 
+/**
+ * Composable for a single dashboard tile representing a favorite stock.
+ */
 @Composable
 fun DashboardTile(data: FavoriteTileData, onClick: () -> Unit) {
     val (color, _) = getSignalColors(data.signal)
@@ -280,6 +322,9 @@ fun DashboardTile(data: FavoriteTileData, onClick: () -> Unit) {
     }
 }
 
+/**
+ * Composable that displays the detailed stock information including price and chart.
+ */
 @Composable
 fun StockContent(
     data: StockUiState.Success,
@@ -324,10 +369,16 @@ fun StockContent(
         Spacer(modifier = Modifier.height(24.dp))
         
         // Graph
-        StockGraph(data.data)
+        StockGraph(data.data, data.meanPrice)
     }
 }
 
+/**
+ * Returns a pair of background and text colors based on the trading signal.
+ *
+ * @param signal The [Signal] (BUY, SELL, NEUTRAL).
+ * @return Pair of [Color] for background and text.
+ */
 fun getSignalColors(signal: Signal): Pair<Color, Color> {
     return when (signal) {
         Signal.BUY -> Pair(Color(0xFFF44336), Color.White) // Red for Buy
@@ -336,10 +387,13 @@ fun getSignalColors(signal: Signal): Pair<Color, Color> {
     }
 }
 
+/**
+ * Composable displaying a large card with the trading signal and price difference.
+ */
 @Composable
 fun SignalCard(signal: Signal, difference: Double, percent: Double) {
     val infiniteTransition = rememberInfiniteTransition(label = "flash")
-    // Only flash if active signal
+    // Only flash if signal is not NEUTRAL
     val alpha = if (signal != Signal.NEUTRAL) {
         infiniteTransition.animateFloat(
             initialValue = 0.5f,
@@ -383,20 +437,25 @@ fun SignalCard(signal: Signal, difference: Double, percent: Double) {
     }
 }
 
+/**
+ * Composable that renders a line chart of the stock's trend over the last 6 days.
+ *
+ * @param data List of [DailyClose] data points.
+ * @param meanPrice The 5-day mean price to draw as a reference line.
+ */
 @Composable
-fun StockGraph(data: List<DailyClose>) {
+fun StockGraph(data: List<DailyClose>, meanPrice: Double? = null) {
     if (data.isEmpty()) return
 
     val points = data.map { it.close }
     val min = points.minOrNull() ?: 0.0
     val max = points.maxOrNull() ?: 1.0
     
-    // Ensure range is at least 1.0 to avoid division by zero
     val actualRange = (max - min)
     val range = if (actualRange == 0.0) 1.0 else actualRange * 1.1
     val effectiveMin = if (actualRange == 0.0) min - 0.5 else min - (range * 0.05)
 
-    Text("Last 6 Days Trend", style = MaterialTheme.typography.labelLarge)
+    Text("Last 6 Days Trend (Gray Dashed = 5-Day Mean)", style = MaterialTheme.typography.labelLarge)
     
     Card(
         modifier = Modifier
@@ -410,7 +469,6 @@ fun StockGraph(data: List<DailyClose>) {
                 val width = size.width
                 val height = size.height
                 
-                // If only one point, we can't draw a line
                 if (points.size > 1) {
                     val xStep = width / (points.size - 1)
                     val path = Path()
@@ -426,12 +484,28 @@ fun StockGraph(data: List<DailyClose>) {
                         }
                     }
 
+                    // Draw Mean reference Line
+                    meanPrice?.let { mean ->
+                        val normalizedMean = (mean - effectiveMin) / range
+                        val yMean = height - (normalizedMean * height).toFloat()
+                        
+                        drawLine(
+                            color = Color.Gray,
+                            start = Offset(0f, yMean),
+                            end = Offset(width, yMean),
+                            strokeWidth = 2.dp.toPx(),
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                        )
+                    }
+
+                    // Draw Stock trend Path
                     drawPath(
                         path = path,
                         color = Color.Blue,
                         style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
                     )
 
+                    // Draw data points
                     points.forEachIndexed { index, value ->
                         val x = index * xStep
                         val normalizedValue = (value - effectiveMin) / range
@@ -460,7 +534,9 @@ fun StockGraph(data: List<DailyClose>) {
     }
 }
 
-// Dummy Theme for single file
+/**
+ * Basic application theme wrapper.
+ */
 @Composable
 fun Theme(content: @Composable () -> Unit) {
     MaterialTheme(

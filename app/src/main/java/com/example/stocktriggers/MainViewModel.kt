@@ -11,12 +11,33 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Data class representing the state of a single stock tile in the favorites dashboard.
+ */
 data class FavoriteTileData(
     val symbol: String,
     val currentPrice: Double,
     val signal: Signal
 )
 
+/**
+ * MainViewModel handles the business logic for the main stock screen and dashboard.
+ *
+ * Intent:
+ * It acts as a bridge between the UI and the data layer (Repositories/Analyzers). It manages
+ * the UI state, favorites dashboard data, and handles user interactions like updating symbols
+ * or toggling favorites.
+ *
+ * Exposed APIs:
+ * - [uiState]: A [StateFlow] of [StockUiState] for the main stock display.
+ * - [favoritesDashboard]: A [StateFlow] of [FavoriteTileData] list for the dashboard.
+ * - [isCurrentFavorite]: A [StateFlow] indicating if the currently searched symbol is a favorite.
+ * - [messageEvent]: A [Flow] of transient messages (e.g., for Toasts).
+ * - [updateSymbol]: Updates the currently tracked stock symbol and fetches new data.
+ * - [fetchData]: Refreshes data for the current symbol.
+ * - [toggleFavorite]: Toggles the favorite status of the current symbol.
+ * - [refreshFavoritesDashboard]: Re-fetches data for all favorited symbols.
+ */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = StockRepository()
@@ -47,12 +68,32 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         refreshFavoritesDashboard()
     }
 
+    /**
+     * Updates the current symbol and triggers a data fetch.
+     *
+     * @param symbol The new stock symbol to track (e.g., "AAPL").
+     *
+     * Example:
+     * ```
+     * viewModel.updateSymbol("MSFT")
+     * ```
+     */
     fun updateSymbol(symbol: String) {
         Log.d(TAG, "Updating symbol to: $symbol")
         currentSymbol = symbol.uppercase()
         fetchData()
     }
 
+    /**
+     * Fetches market data for the currently selected symbol and updates [uiState].
+     *
+     * Handles cases where data is insufficient or fetching fails by updating [uiState] to [StockUiState.Error].
+     *
+     * Example:
+     * ```
+     * viewModel.fetchData()
+     * ```
+     */
     fun fetchData() {
         Log.d(TAG, "Fetching data for symbol: $currentSymbol")
         viewModelScope.launch {
@@ -87,6 +128,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _isCurrentFavorite.value = favoritesRepository.isFavorite(currentSymbol)
     }
     
+    /**
+     * Toggles the favorite status for the current symbol.
+     * Enforces the maximum favorites limit and sends a message to [messageEvent].
+     *
+     * Example:
+     * ```
+     * viewModel.toggleFavorite()
+     * ```
+     */
     fun toggleFavorite() {
         if (favoritesRepository.isFavorite(currentSymbol)) {
             favoritesRepository.removeFavorite(currentSymbol)
@@ -104,6 +154,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         refreshFavoritesDashboard()
     }
     
+    /**
+     * Refreshes the data for all favorited symbols to update the dashboard.
+     *
+     * Example:
+     * ```
+     * viewModel.refreshFavoritesDashboard()
+     * ```
+     */
     fun refreshFavoritesDashboard() {
         viewModelScope.launch {
             val favorites = favoritesRepository.getFavorites()
