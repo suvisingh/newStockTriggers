@@ -3,9 +3,22 @@ package com.example.stocktriggers
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/**
+ * Retrofit interface definition for the Yahoo Finance API.
+ *
+ * Intent:
+ * Defines the HTTP endpoints and request structure for fetching stock market data.
+ */
 interface FinanceApi {
-    // Example endpoint structure (using Yahoo Finance style as a reference for structure)
-    // https://query1.finance.yahoo.com/v8/finance/chart/^NSEI?interval=1d&range=1mo
+    
+    /**
+     * Fetches historical chart data for a specific stock symbol.
+     *
+     * @param symbol The stock ticker symbol (e.g., "^NSEI" for NIFTY 50).
+     * @param interval The data granularity (default: "1d" for daily).
+     * @param range The historical range to fetch (default: "10d" to ensure we have enough working days).
+     * @return [StockData] The parsed API response.
+     */
     @GET("v8/finance/chart/{symbol}")
     suspend fun getStockData(
         @retrofit2.http.Path("symbol") symbol: String,

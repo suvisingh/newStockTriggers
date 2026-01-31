@@ -120,7 +120,8 @@ class MainActivity : ComponentActivity() {
                         isCurrentFavorite = isCurrentFavorite,
                         onRefresh = { viewModel.fetchData() },
                         onUpdateSymbol = { viewModel.updateSymbol(it) },
-                        onToggleFavorite = { viewModel.toggleFavorite() }
+                        onToggleFavorite = { viewModel.toggleFavorite() },
+                        onTestNotification = { viewModel.sendTestNotification() }
                     )
                 }
             }
@@ -130,7 +131,8 @@ class MainActivity : ComponentActivity() {
     /**
      * Configures and schedules a periodic background task to sync stock data hourly.
      *
-     * The task is scheduled to start at 9:45 AM IST and repeat every hour.
+     * The task is scheduled to start at [AppConfig.SYNC_START_HOUR]:[AppConfig.SYNC_START_MINUTE] IST 
+     * and repeat every [AppConfig.SYNC_INTERVAL_VALUE] [AppConfig.SYNC_INTERVAL_UNIT].
      * It uses [WorkManager] to ensure the task runs even if the app is closed.
      *
      * Example:
@@ -141,12 +143,12 @@ class MainActivity : ComponentActivity() {
     private fun setupHourlySync() {
         val workManager = WorkManager.getInstance(this)
         
-        // Calculate delay to next 9:45 AM IST (04:15 UTC)
-        val calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone("Asia/Kolkata"))
+        // Calculate delay to next configured start time
+        val calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone(AppConfig.SYNC_TIMEZONE))
         val now = calendar.timeInMillis
         
-        calendar.set(Calendar.HOUR_OF_DAY, 9)
-        calendar.set(Calendar.MINUTE, 45)
+        calendar.set(Calendar.HOUR_OF_DAY, AppConfig.SYNC_START_HOUR)
+        calendar.set(Calendar.MINUTE, AppConfig.SYNC_START_MINUTE)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         
@@ -156,7 +158,10 @@ class MainActivity : ComponentActivity() {
         
         val initialDelay = calendar.timeInMillis - now
 
-        val syncRequest = PeriodicWorkRequestBuilder<StockSyncWorker>(1, TimeUnit.HOURS)
+        val syncRequest = PeriodicWorkRequestBuilder<StockSyncWorker>(
+            AppConfig.SYNC_INTERVAL_VALUE, 
+            AppConfig.SYNC_INTERVAL_UNIT
+        )
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .setConstraints(
                 Constraints.Builder()
@@ -182,6 +187,7 @@ class MainActivity : ComponentActivity() {
  * @param onRefresh Callback to trigger a data refresh.
  * @param onUpdateSymbol Callback to search for a new symbol.
  * @param onToggleFavorite Callback to add/remove the current symbol from favorites.
+ * @param onTestNotification Callback to trigger a test notification.
  */
 @Composable
 fun StockScreen(
@@ -190,7 +196,8 @@ fun StockScreen(
     isCurrentFavorite: Boolean,
     onRefresh: () -> Unit,
     onUpdateSymbol: (String) -> Unit,
-    onToggleFavorite: () -> Unit
+    onToggleFavorite: () -> Unit,
+    onTestNotification: () -> Unit
 ) {
     var textState by remember { mutableStateOf("") }
     
@@ -245,6 +252,19 @@ fun StockScreen(
                 Text("GO")
             }
         }
+        
+        // Debug/Test Button
+        /*
+        Button(
+            onClick = onTestNotification,
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            ),
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
+            Text("Test Notification")
+        }
+        */
         
         Spacer(modifier = Modifier.height(16.dp))
 

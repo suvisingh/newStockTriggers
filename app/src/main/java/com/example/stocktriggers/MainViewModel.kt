@@ -181,4 +181,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             _favoritesDashboard.value = tiles
         }
     }
+
+    /**
+     * Trigger a test notification immediately.
+     * Useful for verifying system permission and channel setup.
+     */
+    fun sendTestNotification() {
+        // We use a OneTimeWorkRequest to trigger the worker immediately
+        val workManager = androidx.work.WorkManager.getInstance(getApplication())
+        val testRequest = androidx.work.OneTimeWorkRequestBuilder<StockSyncWorker>()
+            .build()
+        workManager.enqueue(testRequest)
+        viewModelScope.launch { _messageEvent.send("Test Notification Triggered") }
+    }
 }
