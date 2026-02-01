@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.stocktriggers.StockSyncLogicTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-02-01T16:17:57.896Z" hostname="suvarnasingh-macbookpro.roam.internal" time="0.013">
+  <properties/>
+  <testcase name="test notification blocked on Sunday even at correct time" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.011"/>
+  <testcase name="test notification blocked after 30 mins window" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
+  <testcase name="test notification allowed at exact scheduled time 11 AM" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
+  <testcase name="test notification blocked on Saturday even at correct time" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
+  <testcase name="test notification allowed at exact scheduled time 2 PM" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
+  <testcase name="test notification allowed within 30 mins after 11 AM" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
+  <testcase name="test notification blocked before 11 AM" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
+  <testcase name="test notification blocked at random times" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -54,7 +54,12 @@ class StockSyncWorker(appContext: Context, workerParams: WorkerParameters) :
                     // Only notify if there is a BUY or SELL signal
                     if (analysis != null && analysis.signal != Signal.NEUTRAL) {
                         Log.d("StockSyncWorker", "Trigger detected for $symbol: ${analysis.signal}")
-                        sendNotification(symbol, analysis.signal, analysis.currentPrice)
+                        
+                        if (shouldNotify()) {
+                            sendNotification(symbol, analysis.signal, analysis.currentPrice)
+                        } else {
+                            Log.d("StockSyncWorker", "Skipping notification: Not in allowed window")
+                        }
                     }
                 } catch (e: Exception) {
                     Log.e("StockSyncWorker", "Failed to sync $symbol", e)
@@ -104,5 +109,36 @@ class StockSyncWorker(appContext: Context, workerParams: WorkerParameters) :
             .build()
             
         notificationManager.notify(symbol.hashCode(), notification)
+    }
+
+    /**
+     * Checks if the current time coincides with a scheduled notification time.
+     * Allowed window is [ScheduledTime, ScheduledTime + 30 minutes].
+     */
+    private fun shouldNotify(): Boolean {
+        val calendar = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone(AppConfig.SYNC_TIMEZONE))
+        
+        // 1. Check for Weekend
+        val dayOfWeek = calendar.get(java.util.Calendar.DAY_OF_WEEK)
+        if (dayOfWeek == java.util.Calendar.SATURDAY || dayOfWeek == java.util.Calendar.SUNDAY) {
+            return false
+        }
+
+        // 2. Check for Time Window
+        val currentHour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
+        val currentMinute = calendar.get(java.util.Calendar.MINUTE)
+
+        // Convert current time to minutes from start of day for easier comparison
+        val currentTotalMinutes = currentHour * 60 + currentMinute
+
+        for ((hour, minute) in AppConfig.NOTIFICATION_TIMES) {
+            val scheduledTotalMinutes = hour * 60 + minute
+            // Check if we are within the 30-minute window AFTER the scheduled time
+            // Example: 11:00 schedule, allowed 11:00 - 11:30
+            if (currentTotalMinutes in scheduledTotalMinutes..(scheduledTotalMinutes + 30)) {
+                return true
+            }
+        }
+        return false
     }
 }

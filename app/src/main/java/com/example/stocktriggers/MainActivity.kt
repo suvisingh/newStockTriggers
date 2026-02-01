@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        setupHourlySync()
+        setupScheduledSyncs()
 
         setContent {
             Theme {
@@ -129,52 +129,52 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
-     * Configures and schedules a periodic background task to sync stock data hourly.
+     * Configures and schedules periodic background tasks for daily syncs.
      *
-     * The task is scheduled to start at [AppConfig.SYNC_START_HOUR]:[AppConfig.SYNC_START_MINUTE] IST 
-     * and repeat every [AppConfig.SYNC_INTERVAL_VALUE] [AppConfig.SYNC_INTERVAL_UNIT].
-     * It uses [WorkManager] to ensure the task runs even if the app is closed.
+     * Iterates through [AppConfig.SYNC_TIMES] and schedules a unique worker for each time.
+     * Each worker runs once every 24 hours.
      *
      * Example:
      * ```
-     * setupHourlySync()
+     * setupScheduledSyncs()
      * ```
      */
-    private fun setupHourlySync() {
+    private fun setupScheduledSyncs() {
         val workManager = WorkManager.getInstance(this)
         
-        // Calculate delay to next configured start time
-        val calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone(AppConfig.SYNC_TIMEZONE))
-        val now = calendar.timeInMillis
-        
-        calendar.set(Calendar.HOUR_OF_DAY, AppConfig.SYNC_START_HOUR)
-        calendar.set(Calendar.MINUTE, AppConfig.SYNC_START_MINUTE)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        
-        if (calendar.timeInMillis <= now) {
-            calendar.add(Calendar.DAY_OF_YEAR, 1) // Schedule for tomorrow if passed
-        }
-        
-        val initialDelay = calendar.timeInMillis - now
-
-        val syncRequest = PeriodicWorkRequestBuilder<StockSyncWorker>(
-            AppConfig.SYNC_INTERVAL_VALUE, 
-            AppConfig.SYNC_INTERVAL_UNIT
-        )
-            .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-            )
-            .build()
+        AppConfig.SYNC_TIMES.forEach { (hour, minute) ->
+            // Calculate delay to next occurrence of this time
+            val calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone(AppConfig.SYNC_TIMEZONE))
+            val now = calendar.timeInMillis
             
-        workManager.enqueueUniquePeriodicWork(
-            "StockSyncHourly",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            syncRequest
-        )
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            
+            if (calendar.timeInMillis <= now) {
+                calendar.add(Calendar.DAY_OF_YEAR, 1) // Schedule for tomorrow if passed
+            }
+            
+            val initialDelay = calendar.timeInMillis - now
+            val uniqueWorkName = "StockSync_${hour}_${minute}"
+
+            // Schedule to run every 24 hours
+            val syncRequest = PeriodicWorkRequestBuilder<StockSyncWorker>(24, TimeUnit.HOURS)
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
+                .build()
+                
+            workManager.enqueueUniquePeriodicWork(
+                uniqueWorkName,
+                ExistingPeriodicWorkPolicy.UPDATE,
+                syncRequest
+            )
+        }
     }
 }
 

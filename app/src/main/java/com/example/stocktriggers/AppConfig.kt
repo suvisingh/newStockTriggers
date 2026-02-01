@@ -10,32 +10,26 @@ import java.util.concurrent.TimeUnit
  */
 object AppConfig {
     /**
-     * The hour of the day (24-hour format) when the daily sync cycle should start.
-     * Default: 9 (9 AM)
+     * List of daily sync times (Hour, Minute) in 24-hour format.
+     * Scheduled for every hour from 9:00 AM to 6:00 PM IST.
      */
-    const val SYNC_START_HOUR = 9
+    val SYNC_TIMES = (9..18).map { hour -> Pair(hour, 0) }
 
     /**
-     * The minute of the hour when the daily sync cycle should start.
-     * Default: 30 (30 minutes past the hour)
+     * List of times when notifications are allowed to be shown.
+     * Notifications only for:
+     * - 11:00 AM
+     * - 2:00 PM (14:00)
      */
-    const val SYNC_START_MINUTE = 30
+    val NOTIFICATION_TIMES = listOf(
+        Pair(11, 0),
+        Pair(14, 0)
+    )
 
     /**
      * The timezone ID for the sync schedule.
      * Default: "Asia/Kolkata" (IST)
      */
     const val SYNC_TIMEZONE = "Asia/Kolkata"
-
-    /**
-     * The interval at which the background sync should repeat.
-     * Default: 1
-     */
-    const val SYNC_INTERVAL_VALUE = 1L
-
-    /**
-     * The unit of time for the sync interval.
-     * Default: HOURS
-     */
-    val SYNC_INTERVAL_UNIT = TimeUnit.HOURS
 }
+
