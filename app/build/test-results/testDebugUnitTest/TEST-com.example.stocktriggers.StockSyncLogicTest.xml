@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.stocktriggers.StockSyncLogicTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-02-01T16:17:57.896Z" hostname="suvarnasingh-macbookpro.roam.internal" time="0.013">
+<testsuite name="com.example.stocktriggers.StockSyncLogicTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-02-02T10:39:38.462Z" hostname="suvarnasingh-macbookpro.roam.internal" time="0.011">
   <properties/>
-  <testcase name="test notification blocked on Sunday even at correct time" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.011"/>
+  <testcase name="test notification blocked on Sunday even at correct time" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.01"/>
   <testcase name="test notification blocked after 30 mins window" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
   <testcase name="test notification allowed at exact scheduled time 11 AM" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>
   <testcase name="test notification blocked on Saturday even at correct time" classname="com.example.stocktriggers.StockSyncLogicTest" time="0.0"/>

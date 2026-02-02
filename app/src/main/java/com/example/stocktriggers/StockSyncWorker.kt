@@ -2,7 +2,9 @@ package com.example.stocktriggers
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -99,12 +101,24 @@ class StockSyncWorker(appContext: Context, workerParams: WorkerParameters) :
         val message = "Price is ${String.format("%.2f", price)}. Check the app!"
         
         Log.d("StockSyncWorker", "Building notification: $title")
+
+        // Create an Intent for the activity you want to start
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent) // Set the intent that will fire when the user taps the notification
             .setAutoCancel(true)
             .build()
             
