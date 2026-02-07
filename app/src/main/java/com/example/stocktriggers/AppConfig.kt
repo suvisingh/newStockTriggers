@@ -11,9 +11,10 @@ import java.util.concurrent.TimeUnit
 object AppConfig {
     /**
      * List of daily sync times (Hour, Minute) in 24-hour format.
-     * Scheduled for every hour from 9:00 AM to 6:00 PM IST.
+     * Scheduled for every hour from 9:00 AM to 6:00 PM IST,
+     * EXCLUDING 11:00 AM and 2:00 PM as they are handled by Exact Alarms.
      */
-    val SYNC_TIMES = (9..18).map { hour -> Pair(hour, 0) }
+    val SYNC_TIMES = (9..18).filter { it != 11 && it != 14 }.map { hour -> Pair(hour, 0) }
 
     /**
      * List of times when notifications are allowed to be shown.

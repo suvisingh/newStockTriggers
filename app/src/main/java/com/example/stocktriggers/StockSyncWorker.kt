@@ -130,6 +130,13 @@ class StockSyncWorker(appContext: Context, workerParams: WorkerParameters) :
      * Allowed window is [ScheduledTime, ScheduledTime + 30 minutes].
      */
     private fun shouldNotify(): Boolean {
+        // 1. Check for Force Notify (from Exact Alarm)
+        if (inputData.getBoolean("FORCE_NOTIFY", false)) {
+             // Even if forced, we might still want to respect weekends? 
+             // The requirement says "Notifications should not show up on weekends".
+             // So we check weekend first.
+        }
+
         val calendar = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone(AppConfig.SYNC_TIMEZONE))
         
         // 1. Check for Weekend
@@ -137,8 +144,14 @@ class StockSyncWorker(appContext: Context, workerParams: WorkerParameters) :
         if (dayOfWeek == java.util.Calendar.SATURDAY || dayOfWeek == java.util.Calendar.SUNDAY) {
             return false
         }
+        
+        // 2. Check for Force Notify
+        if (inputData.getBoolean("FORCE_NOTIFY", false)) {
+            Log.d("StockSyncWorker", "Force notify detected, bypassing time window check")
+            return true
+        }
 
-        // 2. Check for Time Window
+        // 3. Check for Time Window
         val currentHour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
         val currentMinute = calendar.get(java.util.Calendar.MINUTE)
 

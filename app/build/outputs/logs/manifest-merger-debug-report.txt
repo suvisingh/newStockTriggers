@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-31:12
-INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-31:12
-INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-31:12
-INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-31:12
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-34:12
+INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-34:12
+INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-34:12
+INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:2:1-34:12
 MERGED from [androidx.work:work-runtime-ktx:2.11.0] /Users/suvarnasingh/.gradle/caches/9.0-milestone-1/transforms/6b0a579493b2743f66316028bab2b3dc/transformed/work-runtime-ktx-2.11.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.work:work-runtime:2.11.0] /Users/suvarnasingh/.gradle/caches/9.0-milestone-1/transforms/79350a483c3f883c9ea7adcc3ced47eb/transformed/work-runtime-2.11.0/AndroidManifest.xml:17:1-83:12
 MERGED from [androidx.compose.material3:material3:1.1.1] /Users/suvarnasingh/.gradle/caches/9.0-milestone-1/transforms/1f8400d06d3f73cadc8d1b25e4d318d0/transformed/jetified-material3-1.1.1/AndroidManifest.xml:17:1-22:12
@@ -74,9 +74,13 @@ uses-permission#android.permission.POST_NOTIFICATIONS
 ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:6:5-77
 	android:name
 		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:6:22-74
+uses-permission#android.permission.SCHEDULE_EXACT_ALARM
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:7:5-79
+	android:name
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:7:22-76
 application
-ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:8:5-29:19
-INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:8:5-29:19
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:9:5-32:19
+INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:9:5-32:19
 MERGED from [androidx.work:work-runtime:2.11.0] /Users/suvarnasingh/.gradle/caches/9.0-milestone-1/transforms/79350a483c3f883c9ea7adcc3ced47eb/transformed/work-runtime-2.11.0/AndroidManifest.xml:28:5-81:19
 MERGED from [androidx.work:work-runtime:2.11.0] /Users/suvarnasingh/.gradle/caches/9.0-milestone-1/transforms/79350a483c3f883c9ea7adcc3ced47eb/transformed/work-runtime-2.11.0/AndroidManifest.xml:28:5-81:19
 MERGED from [androidx.compose.ui:ui-test-manifest:1.5.0] /Users/suvarnasingh/.gradle/caches/9.0-milestone-1/transforms/fb67e87e76f0118ec660d6b819e6cd7f/transformed/jetified-ui-test-manifest-1.5.0/AndroidManifest.xml:22:5-26:19
@@ -102,43 +106,49 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/suva
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] /Users/suvarnasingh/.gradle/caches/9.0-milestone-1/transforms/c5515d974fbfa6e233259ba7346192c6/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:15:9-35
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:16:9-35
 	android:label
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:13:9-41
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:14:9-41
 	android:fullBackupContent
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:11:9-54
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:12:9-54
 	android:roundIcon
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:14:9-54
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:15:9-54
 	tools:targetApi
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:17:9-29
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:18:9-29
 	android:icon
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:12:9-43
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:13:9-43
 	android:allowBackup
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:9:9-35
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:10:9-35
 	android:theme
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:16:9-51
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:17:9-51
 	android:dataExtractionRules
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:10:9-65
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:11:9-65
 activity#com.example.stocktriggers.MainActivity
-ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:18:9-28:20
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:19:9-29:20
 	android:label
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:21:13-45
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:22:13-45
 	android:exported
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:20:13-36
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:21:13-36
 	android:theme
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:22:13-55
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:23:13-55
 	android:name
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:19:13-41
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:20:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:23:13-27:29
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:24:13-28:29
 action#android.intent.action.MAIN
-ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:24:17-69
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:25:17-69
 	android:name
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:24:25-66
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:25:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:26:17-77
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:27:17-77
 	android:name
-		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:26:27-74
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:27:27-74
+receiver#com.example.stocktriggers.StockAlarmReceiver
+ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:31:9-80
+	android:exported
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:31:54-78
+	android:name
+		ADDED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml:31:19-53
 uses-sdk
 INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/suvarnasingh/gitrepos/newStockTriggers/app/src/main/AndroidManifest.xml

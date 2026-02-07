@@ -94,6 +94,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         setupScheduledSyncs()
+        setupExactAlarms()
 
         setContent {
             Theme {
@@ -173,6 +174,53 @@ class MainActivity : ComponentActivity() {
                 uniqueWorkName,
                 ExistingPeriodicWorkPolicy.UPDATE,
                 syncRequest
+            )
+        }
+    }
+
+    /**
+     * Schedules exact alarms for critical notification times (11 AM, 2 PM) to bypass Doze mode.
+     */
+    private fun setupExactAlarms() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val alarmManager = getSystemService(android.app.AlarmManager::class.java)
+            if (alarmManager?.canScheduleExactAlarms() == true) {
+                 scheduleAlarms(alarmManager)
+            }
+        } else {
+            val alarmManager = getSystemService(android.app.AlarmManager::class.java)
+            if (alarmManager != null) {
+                scheduleAlarms(alarmManager)
+            }
+        }
+    }
+
+    private fun scheduleAlarms(alarmManager: android.app.AlarmManager) {
+        AppConfig.NOTIFICATION_TIMES.forEach { (hour, minute) ->
+            val calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone(AppConfig.SYNC_TIMEZONE))
+            val now = calendar.timeInMillis
+            
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            
+            if (calendar.timeInMillis <= now) {
+                calendar.add(Calendar.DAY_OF_YEAR, 1)
+            }
+            
+            val intent = android.content.Intent(this, StockAlarmReceiver::class.java)
+            val pendingIntent = android.app.PendingIntent.getBroadcast(
+                this,
+                hour * 100 + minute, // Unique request code
+                intent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            )
+            
+            alarmManager.setExactAndAllowWhileIdle(
+                android.app.AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
             )
         }
     }

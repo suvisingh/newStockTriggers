@@ -9,21 +9,30 @@ import java.util.TimeZone
 class StockSyncLogicTest {
 
     // Helper to simulate the shouldNotify logic from StockSyncWorker
+    // Modified to accept dayOfWeek and forceNotify for testing
     // Since shouldNotify is private and depends on system time, we replicate the logic here for testing
     // In a real scenario, we would inject a Clock or TimeProvider dependency.
-    // Helper to simulate the shouldNotify logic from StockSyncWorker
-    // Modified to accept dayOfWeek for testing weekend logic
-    private fun shouldNotifySimulated(currentHour: Int, currentMinute: Int, dayOfWeek: Int = Calendar.MONDAY): Boolean {
+    private fun shouldNotifySimulated(
+        currentHour: Int, 
+        currentMinute: Int, 
+        dayOfWeek: Int = Calendar.MONDAY,
+        forceNotify: Boolean = false
+    ): Boolean {
+        // 1. Check for Weekend (Force notify does NOT bypass weekend check in current implementation)
+        if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+            return false
+        }
+        
+        // 2. Check for Force Notify
+        if (forceNotify) {
+            return true
+        }
+        
         val NOTIFICATION_TIMES = listOf(
             Pair(11, 0),
             Pair(14, 0)
         )
 
-        // 1. Check for Weekend
-        if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-            return false
-        }
-        
         val currentTotalMinutes = currentHour * 60 + currentMinute
 
         for ((hour, minute) in NOTIFICATION_TIMES) {
@@ -33,6 +42,18 @@ class StockSyncLogicTest {
             }
         }
         return false
+    }
+
+    @Test
+    fun `test force notify bypasses time window`() {
+        // 10:00 AM (normally blocked) should pass if forced
+        assertTrue(shouldNotifySimulated(10, 0, forceNotify = true))
+    }
+
+    @Test
+    fun `test force notify still respects weekend check`() {
+        // Saturday with force notify should still be blocked
+        assertFalse(shouldNotifySimulated(11, 0, dayOfWeek = Calendar.SATURDAY, forceNotify = true))
     }
 
     @Test
